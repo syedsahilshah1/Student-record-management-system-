@@ -12,114 +12,205 @@ export default function LandingPage() {
       minHeight: "100vh",
       display: "flex",
       flexDirection: "column",
-      justifyContent: "center",
+      justifyContent: "flex-start",
       alignItems: "center",
-      padding: "2rem",
-      background: "radial-gradient(circle at top, rgba(99, 102, 241, 0.15) 0%, rgba(9, 9, 11, 0) 60%)"
+      padding: "2rem 1.5rem",
+      background: "var(--bg-app)",
+      position: "relative",
+      overflow: "hidden"
     }}>
-      <div className="glass-panel animate-fade" style={{
-        maxWidth: "850px",
-        padding: "4rem 3rem",
-        textAlign: "center",
+      {/* Background Blobs */}
+      <div className="blob blob-1"></div>
+      <div className="blob blob-2"></div>
+
+      {/* Navigation Header */}
+      <header className="glass-panel" style={{
+        width: "100%",
+        maxWidth: "1100px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "1rem 2rem",
+        marginBottom: "4rem",
+        zIndex: 5
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <span style={{ fontSize: "1.5rem" }}>⚡</span>
+          <span style={{ fontWeight: 800, fontSize: "1.25rem", letterSpacing: "-0.03em" }} className="gradient-text">
+            SRMS
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <span style={{
+            fontSize: "0.75rem",
+            background: "rgba(16, 185, 129, 0.1)",
+            color: "var(--color-success)",
+            border: "1px solid rgba(16, 185, 129, 0.2)",
+            padding: "0.25rem 0.75rem",
+            borderRadius: "var(--radius-full)",
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            gap: "0.35rem"
+          }}>
+            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--color-success)" }}></span>
+            Cloud Services Active
+          </span>
+        </div>
+      </header>
+
+      {/* Main Container */}
+      <main className="animate-fade" style={{
+        width: "100%",
+        maxWidth: "1100px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "2.5rem"
+        textAlign: "center",
+        gap: "4rem",
+        zIndex: 5
       }}>
-        <div>
+        
+        {/* Hero Section */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
           <span style={{
-            fontSize: "0.85rem",
-            background: "rgba(99, 102, 241, 0.1)",
+            fontSize: "0.8rem",
+            background: "rgba(99, 102, 241, 0.08)",
             color: "var(--primary)",
-            border: "1px solid rgba(99, 102, 241, 0.2)",
-            padding: "0.35rem 1.25rem",
+            border: "1px solid rgba(99, 102, 241, 0.15)",
+            padding: "0.4rem 1.25rem",
             borderRadius: "var(--radius-full)",
-            fontWeight: 600,
+            fontWeight: 700,
             textTransform: "uppercase",
-            letterSpacing: "0.1em"
+            letterSpacing: "0.12em"
           }}>
-            Institution Portal
+            Academic Console
           </span>
           <h1 className="gradient-text" style={{
-            fontSize: "3.5rem",
+            fontSize: "3.75rem",
             fontWeight: 800,
             lineHeight: 1.1,
-            marginTop: "1.25rem",
-            marginBottom: "1.25rem"
+            maxWidth: "800px"
           }}>
-            Student Record<br />Management System
+            A Unified Management Console for Academic Excellence
           </h1>
           <p style={{
             fontSize: "1.2rem",
             color: "var(--text-secondary)",
-            maxWidth: "600px",
+            maxWidth: "640px",
             lineHeight: 1.6
           }}>
-            A unified administration, grading, and attendance console for educational institutions.
+            Streamline student profiles, record marks rosters, and track daily attendance registers within a secure, real-time cloud workspace.
           </p>
+          <div style={{ marginTop: "1rem" }}>
+            {user ? (
+              <Link href={`/dashboard/${user.role}`} className="btn btn-primary" style={{ padding: "1rem 2.75rem" }}>
+                Enter System Console &rarr;
+              </Link>
+            ) : (
+              <Link href="/login" className="btn btn-primary" style={{ padding: "1rem 2.75rem" }}>
+                Launch System Console
+              </Link>
+            )}
+          </div>
         </div>
 
-        {/* Feature Grid */}
+        {/* Feature Grid Section */}
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: "1.5rem",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "2rem",
           width: "100%",
-          margin: "1rem 0"
+          marginTop: "1.5rem"
         }}>
-          <div style={{
-            background: "rgba(255, 255, 255, 0.02)",
-            border: "1px solid var(--border-glass)",
-            borderRadius: "var(--radius-md)",
-            padding: "1.5rem",
-            textAlign: "left"
-          }}>
-            <span style={{ fontSize: "1.5rem" }}>🛡️</span>
-            <h3 style={{ fontSize: "1.1rem", margin: "0.5rem 0" }}>Role-Based Access</h3>
-            <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
-              Secure workspaces customized for System Administrators, Instructors, and Students.
+          {/* Card 1 */}
+          <div className="premium-card">
+            <div style={{
+              width: "48px",
+              height: "48px",
+              borderRadius: "12px",
+              background: "rgba(99, 102, 241, 0.1)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "1.5rem",
+              border: "1px solid rgba(99, 102, 241, 0.2)",
+              color: "var(--primary)",
+              marginBottom: "0.5rem"
+            }}>
+              🛡️
+            </div>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--text-primary)" }}>
+              Secure Role Workspaces
+            </h3>
+            <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+              Isolated portal interfaces for Administrators, Teachers, and Students. Role verification secures every backend route.
             </p>
           </div>
-          <div style={{
-            background: "rgba(255, 255, 255, 0.02)",
-            border: "1px solid var(--border-glass)",
-            borderRadius: "var(--radius-md)",
-            padding: "1.5rem",
-            textAlign: "left"
-          }}>
-            <span style={{ fontSize: "1.5rem" }}>📊</span>
-            <h3 style={{ fontSize: "1.1rem", margin: "0.5rem 0" }}>Academic Statistics</h3>
-            <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
-              Instantly aggregate student performance records, average scores, and attendance rates.
+
+          {/* Card 2 */}
+          <div className="premium-card">
+            <div style={{
+              width: "48px",
+              height: "48px",
+              borderRadius: "12px",
+              background: "rgba(217, 70, 239, 0.1)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "1.5rem",
+              border: "1px solid rgba(217, 70, 239, 0.2)",
+              color: "var(--secondary)",
+              marginBottom: "0.5rem"
+            }}>
+              📊
+            </div>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--text-primary)" }}>
+              Gradebook Analytics
+            </h3>
+            <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+              Automated subject marks aggregation. Dynamically computes GPA indices, credit weights, and letter grades.
             </p>
           </div>
-          <div style={{
-            background: "rgba(255, 255, 255, 0.02)",
-            border: "1px solid var(--border-glass)",
-            borderRadius: "var(--radius-md)",
-            padding: "1.5rem",
-            textAlign: "left"
-          }}>
-            <span style={{ fontSize: "1.5rem" }}>🖨️</span>
-            <h3 style={{ fontSize: "1.1rem", margin: "0.5rem 0" }}>Transcript Generation</h3>
-            <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
-              Generate official printable student roster ledgers and performance summaries.
+
+          {/* Card 3 */}
+          <div className="premium-card">
+            <div style={{
+              width: "48px",
+              height: "48px",
+              borderRadius: "12px",
+              background: "rgba(16, 185, 129, 0.1)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "1.5rem",
+              border: "1px solid rgba(16, 185, 129, 0.2)",
+              color: "var(--color-success)",
+              marginBottom: "0.5rem"
+            }}>
+              📝
+            </div>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--text-primary)" }}>
+              Roster & Transcript Tools
+            </h3>
+            <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+              Compile daily attendance logs and export print-friendly student transcripts with custom print layout styles.
             </p>
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: "1rem" }}>
-          {user ? (
-            <Link href={`/dashboard/${user.role}`} className="btn btn-primary" style={{ padding: "1rem 2.5rem" }}>
-              Enter System Console &rarr;
-            </Link>
-          ) : (
-            <Link href="/login" className="btn btn-primary" style={{ padding: "1rem 2.5rem" }}>
-              Enter System Console
-            </Link>
-          )}
-        </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer style={{
+        marginTop: "8rem",
+        fontSize: "0.8rem",
+        color: "var(--text-muted)",
+        zIndex: 5,
+        textAlign: "center"
+      }}>
+        &copy; {new Date().getFullYear()} SRMS. All Rights Reserved.
+      </footer>
     </div>
   );
 }
