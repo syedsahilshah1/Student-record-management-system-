@@ -94,17 +94,33 @@ export const Sidebar: React.FC = () => {
         })}
       </nav>
 
-      <div style={{
-        padding: "1rem",
-        borderRadius: "var(--radius-md)",
-        background: "rgba(255,255,255,0.02)",
-        border: "1px solid var(--border-glass)",
-        fontSize: "0.75rem",
-        color: "var(--text-muted)",
-        textAlign: "center"
-      }}>
-        SRMS Console v2.0
-      </div>
+      <a
+        href="https://sahilportfol.netlify.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          padding: "1rem",
+          borderRadius: "var(--radius-md)",
+          background: "rgba(255,255,255,0.02)",
+          border: "1px solid var(--border-glass)",
+          fontSize: "0.75rem",
+          color: "var(--text-muted)",
+          textAlign: "center",
+          textDecoration: "none",
+          display: "block",
+          transition: "var(--transition-smooth)",
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.color = "var(--primary)";
+          e.currentTarget.style.borderColor = "rgba(99, 102, 241, 0.3)";
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.color = "var(--text-muted)";
+          e.currentTarget.style.borderColor = "var(--border-glass)";
+        }}
+      >
+        SRMS Console v2.0 &bull; SahilDev
+      </a>
     </aside>
   );
 };

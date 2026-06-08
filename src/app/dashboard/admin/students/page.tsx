@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { dbService, Student } from "@/services/db";
+import StudentRecordModal from "@/components/StudentRecordModal";
 
 export default function AdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -27,6 +28,10 @@ export default function AdminStudentsPage() {
 
   // Form States (for Edit)
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  
+  // State for viewing/printing a student's full record
+  const [selectedRecordStudent, setSelectedRecordStudent] = useState<Student | null>(null);
+
 
   useEffect(() => {
     loadStudents();
@@ -167,7 +172,7 @@ export default function AdminStudentsPage() {
 
   return (
     <DashboardLayout allowedRole="admin">
-      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+      <div className="no-print" style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
         {/* Header Section */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
@@ -403,13 +408,26 @@ export default function AdminStudentsPage() {
                 ) : (
                   filteredStudents.map((stu) => (
                     <tr key={stu.studentId}>
-                      <td style={{ fontWeight: 600, color: "var(--primary)" }}>{stu.studentId}</td>
+                      <td 
+                        style={{ fontWeight: 600, color: "var(--primary)", cursor: "pointer" }}
+                        onClick={() => setSelectedRecordStudent(stu)}
+                        title="Click to view/download record"
+                      >
+                        {stu.studentId}
+                      </td>
                       <td style={{ fontWeight: 500 }}>{stu.name}</td>
                       <td>{stu.email}</td>
                       <td>{stu.phone}</td>
                       <td>{stu.department}</td>
                       <td>{stu.semester}</td>
                       <td style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}>
+                        <button
+                          onClick={() => setSelectedRecordStudent(stu)}
+                          className="btn btn-primary"
+                          style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem", background: "var(--color-info)", borderColor: "var(--color-info)" }}
+                        >
+                          📄 Record
+                        </button>
                         <button
                           onClick={() => setEditingStudent(stu)}
                           className="btn btn-secondary"
@@ -555,6 +573,12 @@ export default function AdminStudentsPage() {
           </div>
         )}
       </div>
+      {selectedRecordStudent && (
+        <StudentRecordModal
+          student={selectedRecordStudent}
+          onClose={() => setSelectedRecordStudent(null)}
+        />
+      )}
     </DashboardLayout>
   );
 }

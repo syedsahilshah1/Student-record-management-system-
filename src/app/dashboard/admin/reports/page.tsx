@@ -3,12 +3,15 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { dbService, Student, AttendanceRecord, MarkRecord } from "@/services/db";
+import StudentRecordModal from "@/components/StudentRecordModal";
 
 export default function AdminReportsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [marks, setMarks] = useState<MarkRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedRecordStudent, setSelectedRecordStudent] = useState<Student | null>(null);
+
 
   useEffect(() => {
     async function loadData() {
@@ -62,7 +65,7 @@ export default function AdminReportsPage() {
 
   return (
     <DashboardLayout allowedRole="admin">
-      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+      <div className="no-print" style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
         {/* Title & Action */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} className="no-print">
           <div>
@@ -149,6 +152,7 @@ export default function AdminReportsPage() {
                       <th>Semester</th>
                       <th style={{ textAlign: "center" }}>Attendance %</th>
                       <th style={{ textAlign: "right" }}>Grade Avg</th>
+                      <th style={{ textAlign: "center" }} className="no-print">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -165,13 +169,29 @@ export default function AdminReportsPage() {
 
                       return (
                         <tr key={stu.studentId}>
-                          <td style={{ fontWeight: 600, color: "var(--primary)" }} className="print-id">{stu.studentId}</td>
+                          <td 
+                            style={{ fontWeight: 600, color: "var(--primary)", cursor: "pointer" }} 
+                            className="print-id"
+                            onClick={() => setSelectedRecordStudent(stu)}
+                            title="Click to view/download record"
+                          >
+                            {stu.studentId}
+                          </td>
                           <td style={{ fontWeight: 500 }}>{stu.name}</td>
                           <td>{stu.department}</td>
                           <td>{stu.semester}</td>
                           <td style={{ textAlign: "center" }}>{attRate}%</td>
                           <td style={{ textAlign: "right", fontWeight: 700 }}>
                             {gradeAvg !== null ? `${gradeAvg}%` : "No Grades"}
+                          </td>
+                          <td style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }} className="no-print">
+                            <button
+                              onClick={() => setSelectedRecordStudent(stu)}
+                              className="btn btn-primary"
+                              style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem", background: "var(--color-info)", borderColor: "var(--color-info)" }}
+                            >
+                              🖨️ Print
+                            </button>
                           </td>
                         </tr>
                       );
@@ -183,6 +203,12 @@ export default function AdminReportsPage() {
           </div>
         )}
       </div>
+      {selectedRecordStudent && (
+        <StudentRecordModal
+          student={selectedRecordStudent}
+          onClose={() => setSelectedRecordStudent(null)}
+        />
+      )}
     </DashboardLayout>
   );
 }
