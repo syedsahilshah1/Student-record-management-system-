@@ -130,82 +130,19 @@ export default function LoginPage() {
         </form>
 
         {isDemoMode && (
-          <div style={{
-            borderTop: "1px solid var(--border-glass)",
-            paddingTop: "1.5rem",
-            marginTop: "0.5rem"
+          <p style={{
+            fontSize: "0.8rem",
+            color: "var(--color-warning)",
+            textAlign: "center",
+            marginTop: "1.25rem",
+            lineHeight: "1.4",
+            background: "var(--color-warning-bg)",
+            border: "1px solid rgba(245, 158, 11, 0.2)",
+            padding: "0.6rem 0.8rem",
+            borderRadius: "var(--radius-md)"
           }}>
-            <h4 style={{
-              fontSize: "0.8rem",
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-              color: "var(--text-muted)",
-              marginBottom: "1rem",
-              textAlign: "center"
-            }}>
-              Quick-Select Demo Accounts
-            </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              <button
-                onClick={() => handlePreseedClick("admin@srms.com", "admin123")}
-                style={{
-                  background: "rgba(239, 68, 68, 0.05)",
-                  border: "1px solid rgba(239, 68, 68, 0.15)",
-                  borderRadius: "var(--radius-md)",
-                  padding: "0.6rem 1rem",
-                  color: "var(--text-primary)",
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: "0.85rem",
-                  transition: "var(--transition-smooth)"
-                }}
-                className="demo-btn"
-              >
-                <span>🔑 <strong>Admin</strong> (Management)</span>
-                <span style={{ color: "var(--text-muted)" }}>Select</span>
-              </button>
-              <button
-                onClick={() => handlePreseedClick("teacher@srms.com", "teacher123")}
-                style={{
-                  background: "rgba(6, 182, 212, 0.05)",
-                  border: "1px solid rgba(6, 182, 212, 0.15)",
-                  borderRadius: "var(--radius-md)",
-                  padding: "0.6rem 1rem",
-                  color: "var(--text-primary)",
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: "0.85rem",
-                  transition: "var(--transition-smooth)"
-                }}
-                className="demo-btn"
-              >
-                <span>📝 <strong>Teacher</strong> (Grades & Att.)</span>
-                <span style={{ color: "var(--text-muted)" }}>Select</span>
-              </button>
-              <button
-                onClick={() => handlePreseedClick("student@srms.com", "student123")}
-                style={{
-                  background: "rgba(16, 185, 129, 0.05)",
-                  border: "1px solid rgba(16, 185, 129, 0.15)",
-                  borderRadius: "var(--radius-md)",
-                  padding: "0.6rem 1rem",
-                  color: "var(--text-primary)",
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: "0.85rem",
-                  transition: "var(--transition-smooth)"
-                }}
-                className="demo-btn"
-              >
-                <span>🎓 <strong>Student</strong> (Profile & Marks)</span>
-                <span style={{ color: "var(--text-muted)" }}>Select</span>
-              </button>
-            </div>
-          </div>
+            ⚠️ <strong>Offline Demo Mode</strong>: Database environment variables are not configured. Use <strong>admin@srms.com</strong> / <strong>admin123</strong> to test the console.
+          </p>
         )}
       </div>
     </div>
