@@ -13,24 +13,32 @@ export default function TeacherMarksPage() {
   const [success, setSuccess] = useState<string | null>(null);
 
   // Selectors
-  const [selectedDept, setSelectedDept] = useState("Computer Science");
+  const [selectedDept, setSelectedDept] = useState("");
   const [selectedSem, setSelectedSem] = useState("6th");
   const [selectedSubject, setSelectedSubject] = useState("");
+  const [departments, setDepartments] = useState<string[]>([]);
 
   // Marks Dict State: studentId -> marks (number or empty string)
   const [marksDict, setMarksDict] = useState<Record<string, string>>({});
 
-  // 1. Load available courses once
+  // 1. Load courses and departments
   useEffect(() => {
-    async function loadCourses() {
+    async function loadInitialData() {
       try {
-        const allCourses = await dbService.getCourses();
+        const [allCourses, allDepts] = await Promise.all([
+          dbService.getCourses(),
+          dbService.getDepartments()
+        ]);
         setCourses(allCourses);
+        setDepartments(allDepts);
+        if (allDepts.length > 0) {
+          setSelectedDept(allDepts[0]);
+        }
       } catch (err) {
-        console.error("Error loading courses:", err);
+        console.error("Error loading initial data:", err);
       }
     }
-    loadCourses();
+    loadInitialData();
   }, []);
 
   // Filter courses by department
@@ -205,8 +213,9 @@ export default function TeacherMarksPage() {
               onChange={(e) => setSelectedDept(e.target.value)}
               className="form-select"
             >
-              <option value="Computer Science">Computer Science</option>
-              <option value="Electrical Eng">Electrical Eng</option>
+              {departments.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
             </select>
           </div>
 

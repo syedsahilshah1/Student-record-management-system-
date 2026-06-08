@@ -16,8 +16,24 @@ export default function TeacherAttendancePage() {
     const today = new Date();
     return today.toISOString().split("T")[0];
   });
-  const [selectedDept, setSelectedDept] = useState("Computer Science");
+  const [selectedDept, setSelectedDept] = useState("");
   const [selectedSem, setSelectedSem] = useState("6th");
+  const [departments, setDepartments] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function loadDepts() {
+      try {
+        const depts = await dbService.getDepartments();
+        setDepartments(depts);
+        if (depts.length > 0) {
+          setSelectedDept(depts[0]);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadDepts();
+  }, []);
 
   // Attendance Dict State: studentId -> "Present" | "Absent"
   const [attendanceDict, setAttendanceDict] = useState<Record<string, "Present" | "Absent">>({});
@@ -175,8 +191,9 @@ export default function TeacherAttendancePage() {
               onChange={(e) => setSelectedDept(e.target.value)}
               className="form-select"
             >
-              <option value="Computer Science">Computer Science</option>
-              <option value="Electrical Eng">Electrical Eng</option>
+              {departments.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
             </select>
           </div>
 

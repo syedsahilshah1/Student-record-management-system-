@@ -137,6 +137,9 @@ export default function AdminDashboard() {
                   <Link href="/dashboard/admin/courses" className="btn btn-secondary" style={{ justifyContent: "center", background: "rgba(255,255,255,0.05)" }}>
                     📚 Manage Courses
                   </Link>
+                  <Link href="/dashboard/admin/departments" className="btn btn-secondary" style={{ justifyContent: "center", background: "rgba(255,255,255,0.05)" }}>
+                    🏢 Manage Departments
+                  </Link>
                   <Link href="/dashboard/admin/reports" className="btn btn-secondary" style={{ justifyContent: "center", background: "rgba(255,255,255,0.05)" }}>
                     📈 Generate Reports Center
                   </Link>

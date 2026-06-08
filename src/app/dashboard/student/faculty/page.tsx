@@ -23,11 +23,17 @@ export default function StudentFacultyPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [deptFilter, setDeptFilter] = useState("All");
 
+  const [departments, setDepartments] = useState<string[]>([]);
+
   useEffect(() => {
     async function loadFaculty() {
       try {
-        const data = await dbService.getTeachers();
-        setTeachers(data);
+        const [teachersData, deptsData] = await Promise.all([
+          dbService.getTeachers(),
+          dbService.getDepartments()
+        ]);
+        setTeachers(teachersData);
+        setDepartments(deptsData);
       } catch (err: any) {
         setError("Failed to load faculty directory.");
       } finally {
@@ -102,8 +108,9 @@ export default function StudentFacultyPage() {
               className="form-select"
             >
               <option value="All">All Departments</option>
-              <option value="Computer Science">Computer Science</option>
-              <option value="Electrical Eng">Electrical Eng</option>
+              {departments.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
             </select>
           </div>
         </div>

@@ -25,6 +25,7 @@ export const Sidebar: React.FC = () => {
       { label: "Manage Students", href: "/dashboard/admin/students", icon: "🎓" },
       { label: "Manage Teachers", href: "/dashboard/admin/teachers", icon: "🧑‍🏫" },
       { label: "Manage Courses", href: "/dashboard/admin/courses", icon: "📚" },
+      { label: "Manage Departments", href: "/dashboard/admin/departments", icon: "🏢" },
       { label: "Attendance Records", href: "/dashboard/admin/attendance", icon: "📅" },
       { label: "Marks Overview", href: "/dashboard/admin/marks", icon: "📝" },
       { label: "Report Center", href: "/dashboard/admin/reports", icon: "📈" },

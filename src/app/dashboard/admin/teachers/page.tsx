@@ -28,7 +28,8 @@ export default function AdminTeachersPage() {
   const [teacherId, setTeacherId] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [department, setDepartment] = useState("Computer Science");
+  const [department, setDepartment] = useState("");
+  const [departments, setDepartments] = useState<string[]>([]);
   const [designation, setDesignation] = useState("Assistant Professor");
   const [specialization, setSpecialization] = useState("");
   const [isAdding, setIsAdding] = useState(false);
@@ -38,7 +39,20 @@ export default function AdminTeachersPage() {
 
   useEffect(() => {
     loadTeachers();
+    loadDepartments();
   }, []);
+
+  const loadDepartments = async () => {
+    try {
+      const depts = await dbService.getDepartments();
+      setDepartments(depts);
+      if (depts.length > 0) {
+        setDepartment(depts[0]);
+      }
+    } catch (err) {
+      console.error("Failed to load departments:", err);
+    }
+  };
 
   const loadTeachers = async () => {
     setLoading(true);
@@ -89,7 +103,7 @@ export default function AdminTeachersPage() {
       setTeacherId("");
       setName("");
       setEmail("");
-      setDepartment("Computer Science");
+      setDepartment(departments[0] || "");
       setDesignation("Assistant Professor");
       setSpecialization("");
       setIsAdding(false);
@@ -268,8 +282,9 @@ export default function AdminTeachersPage() {
                   onChange={(e) => setDepartment(e.target.value)}
                   className="form-select"
                 >
-                  <option value="Computer Science">Computer Science</option>
-                  <option value="Electrical Eng">Electrical Eng</option>
+                  {departments.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
                 </select>
               </div>
 
@@ -338,8 +353,9 @@ export default function AdminTeachersPage() {
               className="form-select"
             >
               <option value="All">All Departments</option>
-              <option value="Computer Science">Computer Science</option>
-              <option value="Electrical Eng">Electrical Eng</option>
+              {departments.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -477,12 +493,13 @@ export default function AdminTeachersPage() {
                   <label className="input-label" htmlFor="edit-dept">Department</label>
                   <select
                     id="edit-dept"
-                    value={editingTeacher.department || "Computer Science"}
+                    value={editingTeacher.department || (departments[0] || "")}
                     onChange={(e) => setEditingTeacher({ ...editingTeacher, department: e.target.value })}
                     className="form-select"
                   >
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Electrical Eng">Electrical Eng</option>
+                    {departments.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
                   </select>
                 </div>
 

@@ -13,6 +13,19 @@ export default function AdminAttendancePage() {
   const [deptFilter, setDeptFilter] = useState("All");
   const [semFilter, setSemFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [departments, setDepartments] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function loadDepts() {
+      try {
+        const depts = await dbService.getDepartments();
+        setDepartments(depts);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadDepts();
+  }, []);
 
   useEffect(() => {
     async function loadData() {
@@ -100,8 +113,9 @@ export default function AdminAttendancePage() {
               className="form-select"
             >
               <option value="All">All Departments</option>
-              <option value="Computer Science">Computer Science</option>
-              <option value="Electrical Eng">Electrical Eng</option>
+              {departments.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
             </select>
           </div>
 

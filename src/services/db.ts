@@ -451,5 +451,54 @@ export const dbService = {
       });
       setMockData("srms_marks", list);
     }
+  },
+
+  // ==========================================
+  // DEPARTMENTS OPERATIONS
+  // ==========================================
+  getDepartments: async (): Promise<string[]> => {
+    if (isFirebaseConfigured && db) {
+      const snap = await getDocs(collection(db, "departments"));
+      const list = snap.docs.map((d) => d.id);
+      if (list.length === 0) {
+        // Seed departments
+        const initial = ["Computer Science", "Electrical Eng"];
+        const batch = writeBatch(db);
+        initial.forEach((d) => {
+          batch.set(doc(db!, "departments", d), {});
+        });
+        await batch.commit();
+        return initial;
+      }
+      return list;
+    } else {
+      return getMockData<string>("srms_departments", ["Computer Science", "Electrical Eng"]);
+    }
+  },
+
+  addDepartment: async (dept: string): Promise<void> => {
+    const trimmed = dept.trim();
+    if (!trimmed) throw new Error("Department name cannot be empty");
+    if (isFirebaseConfigured && db) {
+      await setDoc(doc(db, "departments", trimmed), {});
+    } else {
+      const list = getMockData<string>("srms_departments", ["Computer Science", "Electrical Eng"]);
+      if (list.some((d) => d.toLowerCase() === trimmed.toLowerCase())) {
+        throw new Error("Department already exists");
+      }
+      list.push(trimmed);
+      setMockData("srms_departments", list);
+    }
+  },
+
+  deleteDepartment: async (dept: string): Promise<void> => {
+    const trimmed = dept.trim();
+    if (isFirebaseConfigured && db) {
+      await deleteDoc(doc(db, "departments", trimmed));
+    } else {
+      const list = getMockData<string>("srms_departments", ["Computer Science", "Electrical Eng"]);
+      const filtered = list.filter((d) => d !== trimmed);
+      setMockData("srms_departments", filtered);
+    }
   }
 };
