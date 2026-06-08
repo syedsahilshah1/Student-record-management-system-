@@ -45,60 +45,13 @@ export interface Course {
 }
 
 // --- Pre-seeded Mock Data ---
-export const MOCK_COURSES: Course[] = [
-  { courseId: "CS101", courseName: "Web Development", creditHours: 3, department: "Computer Science" },
-  { courseId: "CS102", courseName: "Software Engineering", creditHours: 4, department: "Computer Science" },
-  { courseId: "CS103", courseName: "Database Systems", creditHours: 3, department: "Computer Science" },
-  { courseId: "EE201", courseName: "Signals & Systems", creditHours: 3, department: "Electrical Eng" },
-  { courseId: "EE202", courseName: "Digital Design", creditHours: 4, department: "Electrical Eng" },
-];
+export const MOCK_COURSES: Course[] = [];
 
-export const MOCK_STUDENTS: Student[] = [
-  {
-    studentId: "STU001",
-    name: "John Doe",
-    email: "student@srms.com",
-    phone: "123-456-7890",
-    department: "Computer Science",
-    semester: "6th",
-  },
-  {
-    studentId: "STU002",
-    name: "Jane Smith",
-    email: "jane.smith@srms.com",
-    phone: "987-654-3210",
-    department: "Computer Science",
-    semester: "6th",
-  },
-  {
-    studentId: "STU003",
-    name: "Bob Johnson",
-    email: "bob.johnson@srms.com",
-    phone: "555-555-5555",
-    department: "Electrical Eng",
-    semester: "4th",
-  },
-];
+export const MOCK_STUDENTS: Student[] = [];
 
-const MOCK_ATTENDANCE: AttendanceRecord[] = [
-  { id: "att-1", studentId: "STU001", date: "2026-06-08", status: "Present" },
-  { id: "att-2", studentId: "STU001", date: "2026-06-07", status: "Present" },
-  { id: "att-3", studentId: "STU002", date: "2026-06-08", status: "Present" },
-  { id: "att-4", studentId: "STU002", date: "2026-06-07", status: "Absent" },
-  { id: "att-5", studentId: "STU003", date: "2026-06-08", status: "Absent" },
-  { id: "att-6", studentId: "STU003", date: "2026-06-07", status: "Present" },
-];
+const MOCK_ATTENDANCE: AttendanceRecord[] = [];
 
-const MOCK_MARKS: MarkRecord[] = [
-  { id: "mrk-1", studentId: "STU001", subject: "Web Development", marks: 85 },
-  { id: "mrk-2", studentId: "STU001", subject: "Software Engineering", marks: 92 },
-  { id: "mrk-3", studentId: "STU001", subject: "Database Systems", marks: 78 },
-  { id: "mrk-4", studentId: "STU002", subject: "Web Development", marks: 90 },
-  { id: "mrk-5", studentId: "STU002", subject: "Software Engineering", marks: 88 },
-  { id: "mrk-6", studentId: "STU002", subject: "Database Systems", marks: 85 },
-  { id: "mrk-7", studentId: "STU003", subject: "Signals & Systems", marks: 72 },
-  { id: "mrk-8", studentId: "STU003", subject: "Digital Design", marks: 81 },
-];
+const MOCK_MARKS: MarkRecord[] = [];
 
 // --- Local Storage Mock Setup Helper ---
 const getMockData = <T>(key: string, initial: T[]): T[] => {

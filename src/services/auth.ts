@@ -27,20 +27,6 @@ export const MOCK_USERS: Record<string, UserProfile & { passwordHash: string }> 
     role: "admin",
     passwordHash: "admin123",
   },
-  "teacher@srms.com": {
-    uid: "mock-teacher-uid",
-    name: "Prof. Sarah Connor",
-    email: "teacher@srms.com",
-    role: "teacher",
-    passwordHash: "teacher123",
-  },
-  "student@srms.com": {
-    uid: "mock-student-uid",
-    name: "John Doe",
-    email: "student@srms.com",
-    role: "student",
-    passwordHash: "student123",
-  },
 };
 
 type AuthCallback = (user: UserProfile | null) => void;
@@ -86,15 +72,15 @@ export const authService = {
             uid: user.uid,
             name: data.name || user.displayName || "User",
             email: user.email || cleanEmail,
-            role: data.role || "student",
+            role: data.role || "admin",
           };
         } else {
           // Fallback profile if Firestore entry is missing
           return {
             uid: user.uid,
-            name: user.displayName || "User",
+            name: user.displayName || "Administrator",
             email: user.email || cleanEmail,
-            role: "student", // default role
+            role: "admin", // default role is admin so new Auth users can configure the app
           };
         }
       } catch (err: any) {
@@ -250,14 +236,14 @@ export const authService = {
                 uid: firebaseUser.uid,
                 name: data.name || firebaseUser.displayName || "User",
                 email: firebaseUser.email || "",
-                role: data.role || "student",
+                role: data.role || "admin",
               });
             } else {
               callback({
                 uid: firebaseUser.uid,
-                name: firebaseUser.displayName || "User",
+                name: firebaseUser.displayName || "Administrator",
                 email: firebaseUser.email || "",
-                role: "student",
+                role: "admin",
               });
             }
           } catch (e) {
