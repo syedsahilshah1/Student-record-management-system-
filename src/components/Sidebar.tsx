@@ -23,6 +23,8 @@ export const Sidebar: React.FC = () => {
     admin: [
       { label: "Dashboard", href: "/dashboard/admin", icon: "📊" },
       { label: "Manage Students", href: "/dashboard/admin/students", icon: "🎓" },
+      { label: "Manage Teachers", href: "/dashboard/admin/teachers", icon: "🧑‍🏫" },
+      { label: "Manage Courses", href: "/dashboard/admin/courses", icon: "📚" },
       { label: "Attendance Records", href: "/dashboard/admin/attendance", icon: "📅" },
       { label: "Marks Overview", href: "/dashboard/admin/marks", icon: "📝" },
       { label: "Report Center", href: "/dashboard/admin/reports", icon: "📈" },
@@ -34,6 +36,7 @@ export const Sidebar: React.FC = () => {
     ],
     student: [
       { label: "Profile Hub", href: "/dashboard/student", icon: "🎓" },
+      { label: "Faculty Directory", href: "/dashboard/student/faculty", icon: "🧑‍🏫" },
       { label: "My Attendance", href: "/dashboard/student/attendance", icon: "📅" },
       { label: "My Marks", href: "/dashboard/student/marks", icon: "📝" },
     ],

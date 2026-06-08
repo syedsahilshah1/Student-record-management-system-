@@ -104,8 +104,9 @@ export const authService = {
                 
                 // Copy/create permanent users doc at users[newUser.uid]
                 await setDoc(doc(db, "users", newUser.uid), {
+                  ...tempDocData,
                   uid: newUser.uid,
-                  name: tempDocData.name || "Student",
+                  name: tempDocData.name || "System User",
                   email: cleanEmail,
                   role: tempDocData.role || "student"
                 });
@@ -123,8 +124,11 @@ export const authService = {
                 };
               }
             }
-          } catch (seedErr) {
+          } catch (seedErr: any) {
             console.error("Auto registration on first login failed:", seedErr);
+            if (seedErr.code === "permission-denied" || (seedErr.message && seedErr.message.includes("permission"))) {
+              throw new Error("First-time login setup failed due to Firestore permissions. Please update your Firestore Security Rules to allow unauthenticated reads on the 'users' collection.");
+            }
           }
         }
         throw err;
@@ -178,6 +182,36 @@ export const authService = {
           };
           if (!savedPasswords[cleanEmail]) {
             savedPasswords[cleanEmail] = enrolledStudent.email.toLowerCase();
+            localStorage.setItem("srms_mock_passwords", JSON.stringify(savedPasswords));
+          }
+          localStorage.setItem("srms_current_user", JSON.stringify(currentMockUser));
+          triggerListeners();
+          return currentMockUser;
+        }
+      }
+
+      // Check newly registered teachers
+      let teachersList: any[] = [];
+      if (typeof window !== "undefined") {
+        const stored = localStorage.getItem("srms_teachers");
+        if (stored) {
+          try { teachersList = JSON.parse(stored); } catch {}
+        }
+      }
+
+      const enrolledTeacher = teachersList.find((t) => t.email.toLowerCase() === cleanEmail);
+      if (enrolledTeacher) {
+        // Default password is their email address
+        const expectedPassword = savedPasswords[cleanEmail] || enrolledTeacher.email.toLowerCase();
+        if (password === expectedPassword) {
+          currentMockUser = {
+            uid: enrolledTeacher.uid,
+            name: enrolledTeacher.name,
+            email: enrolledTeacher.email,
+            role: "teacher",
+          };
+          if (!savedPasswords[cleanEmail]) {
+            savedPasswords[cleanEmail] = enrolledTeacher.email.toLowerCase();
             localStorage.setItem("srms_mock_passwords", JSON.stringify(savedPasswords));
           }
           localStorage.setItem("srms_current_user", JSON.stringify(currentMockUser));

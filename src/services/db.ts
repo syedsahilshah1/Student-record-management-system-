@@ -102,6 +102,148 @@ export const dbService = {
     }
   },
 
+  addCourse: async (course: Course): Promise<void> => {
+    if (isFirebaseConfigured && db) {
+      await setDoc(doc(db, "courses", course.courseId), course);
+    } else {
+      const list = getMockData("srms_courses", MOCK_COURSES);
+      if (list.some((c) => c.courseId === course.courseId)) {
+        throw new Error("Course ID already exists");
+      }
+      list.push(course);
+      setMockData("srms_courses", list);
+    }
+  },
+
+  updateCourse: async (courseId: string, data: Partial<Course>): Promise<void> => {
+    if (isFirebaseConfigured && db) {
+      const docRef = doc(db, "courses", courseId);
+      await updateDoc(docRef, data);
+    } else {
+      const list = getMockData("srms_courses", MOCK_COURSES);
+      const index = list.findIndex((c) => c.courseId === courseId);
+      if (index === -1) throw new Error("Course not found");
+      list[index] = { ...list[index], ...data };
+      setMockData("srms_courses", list);
+    }
+  },
+
+  deleteCourse: async (courseId: string): Promise<void> => {
+    if (isFirebaseConfigured && db) {
+      await deleteDoc(doc(db, "courses", courseId));
+    } else {
+      const list = getMockData("srms_courses", MOCK_COURSES);
+      const filtered = list.filter((c) => c.courseId !== courseId);
+      setMockData("srms_courses", filtered);
+    }
+  },
+
+  // ==========================================
+  // TEACHERS OPERATIONS
+  // ==========================================
+  getTeachers: async (): Promise<any[]> => {
+    if (isFirebaseConfigured && db) {
+      const q = query(collection(db, "users"), where("role", "==", "teacher"));
+      const snap = await getDocs(q);
+      return snap.docs.map((d) => d.data());
+    } else {
+      return getMockData<any>("srms_teachers", []);
+    }
+  },
+
+  addTeacher: async (teacher: { uid: string; name: string; email: string; department: string; designation: string; specialization: string }): Promise<void> => {
+    const cleanEmail = teacher.email.trim().toLowerCase();
+    if (isFirebaseConfigured && db) {
+      await setDoc(doc(db, "users", teacher.uid), {
+        uid: teacher.uid,
+        name: teacher.name,
+        email: cleanEmail,
+        role: "teacher",
+        department: teacher.department,
+        designation: teacher.designation,
+        specialization: teacher.specialization,
+      });
+    } else {
+      const list = getMockData<any>("srms_teachers", []);
+      if (list.some((t: any) => t.uid === teacher.uid)) {
+        throw new Error("Teacher ID already exists");
+      }
+      if (list.some((t: any) => t.email.toLowerCase() === cleanEmail)) {
+        throw new Error("Teacher Email already exists");
+      }
+      const newTeacher = {
+        uid: teacher.uid,
+        name: teacher.name,
+        email: cleanEmail,
+        role: "teacher",
+        department: teacher.department,
+        designation: teacher.designation,
+        specialization: teacher.specialization,
+      };
+      list.push(newTeacher);
+      setMockData("srms_teachers", list);
+      
+      // Also register password in mock storage
+      let savedPasswords: Record<string, string> = {};
+      const saved = localStorage.getItem("srms_mock_passwords");
+      if (saved) {
+        try { savedPasswords = JSON.parse(saved); } catch {}
+      }
+      savedPasswords[cleanEmail] = cleanEmail; // default password is email
+      localStorage.setItem("srms_mock_passwords", JSON.stringify(savedPasswords));
+    }
+  },
+
+  updateTeacher: async (teacherId: string, data: { name: string; email: string; department: string; designation: string; specialization: string }): Promise<void> => {
+    const cleanEmail = data.email.trim().toLowerCase();
+    if (isFirebaseConfigured && db) {
+      const docRef = doc(db, "users", teacherId);
+      await updateDoc(docRef, {
+        name: data.name,
+        email: cleanEmail,
+        department: data.department,
+        designation: data.designation,
+        specialization: data.specialization,
+      });
+    } else {
+      const list = getMockData<any>("srms_teachers", []);
+      const index = list.findIndex((t: any) => t.uid === teacherId);
+      if (index === -1) throw new Error("Teacher not found");
+      const oldEmail = list[index].email;
+      list[index] = { 
+        ...list[index], 
+        name: data.name, 
+        email: cleanEmail,
+        department: data.department,
+        designation: data.designation,
+        specialization: data.specialization
+      };
+      setMockData("srms_teachers", list);
+      
+      let savedPasswords: Record<string, string> = {};
+      const saved = localStorage.getItem("srms_mock_passwords");
+      if (saved) {
+        try { savedPasswords = JSON.parse(saved); } catch {}
+      }
+      if (savedPasswords[oldEmail.toLowerCase()]) {
+        const pass = savedPasswords[oldEmail.toLowerCase()];
+        delete savedPasswords[oldEmail.toLowerCase()];
+        savedPasswords[cleanEmail] = pass;
+        localStorage.setItem("srms_mock_passwords", JSON.stringify(savedPasswords));
+      }
+    }
+  },
+
+  deleteTeacher: async (teacherId: string): Promise<void> => {
+    if (isFirebaseConfigured && db) {
+      await deleteDoc(doc(db, "users", teacherId));
+    } else {
+      const list = getMockData<any>("srms_teachers", []);
+      const filtered = list.filter((t: any) => t.uid !== teacherId);
+      setMockData("srms_teachers", filtered);
+    }
+  },
+
   // ==========================================
   // STUDENTS OPERATIONS
   // ==========================================

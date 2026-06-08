@@ -8,6 +8,7 @@ import Link from "next/link";
 export default function AdminDashboard() {
   const [students, setStudents] = useState<Student[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [teachers, setTeachers] = useState<any[]>([]);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [marks, setMarks] = useState<MarkRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,16 +16,18 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function loadStats() {
       try {
-        const [stuList, courseList, attList, marksList] = await Promise.all([
+        const [stuList, courseList, attList, marksList, teacherList] = await Promise.all([
           dbService.getStudents(),
           dbService.getCourses(),
           dbService.getAttendance(),
-          dbService.getMarks()
+          dbService.getMarks(),
+          dbService.getTeachers()
         ]);
         setStudents(stuList);
         setCourses(courseList);
         setAttendance(attList);
         setMarks(marksList);
+        setTeachers(teacherList);
       } catch (error) {
         console.error("Failed to load statistics:", error);
       } finally {
@@ -84,7 +87,15 @@ export default function AdminDashboard() {
                 <span style={{ fontSize: "0.75rem", color: "var(--color-success)" }}>Active Enrollments</span>
               </div>
 
-              {/* Stat 2: Active Courses */}
+              {/* Stat 2: Total Teachers */}
+              <div className="glass-panel" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <span style={{ fontSize: "1.5rem" }}>🧑‍🏫</span>
+                <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)", fontWeight: 500 }}>Total Teachers</span>
+                <span style={{ fontSize: "2.25rem", fontWeight: 700 }}>{teachers.length}</span>
+                <span style={{ fontSize: "0.75rem", color: "var(--secondary)" }}>Faculty Members</span>
+              </div>
+
+              {/* Stat 3: Active Courses */}
               <div className="glass-panel" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <span style={{ fontSize: "1.5rem" }}>📚</span>
                 <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)", fontWeight: 500 }}>Active Courses</span>
@@ -92,7 +103,7 @@ export default function AdminDashboard() {
                 <span style={{ fontSize: "0.75rem", color: "var(--primary)" }}>Offered Subjects</span>
               </div>
 
-              {/* Stat 3: Avg Attendance */}
+              {/* Stat 4: Avg Attendance */}
               <div className="glass-panel" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <span style={{ fontSize: "1.5rem" }}>📅</span>
                 <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)", fontWeight: 500 }}>Avg Attendance</span>
@@ -102,7 +113,7 @@ export default function AdminDashboard() {
                 </span>
               </div>
 
-              {/* Stat 4: Avg Class Grade */}
+              {/* Stat 5: Avg Class Grade */}
               <div className="glass-panel" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <span style={{ fontSize: "1.5rem" }}>📝</span>
                 <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)", fontWeight: 500 }}>System Grade Avg</span>
@@ -118,10 +129,16 @@ export default function AdminDashboard() {
                 <h3 style={{ fontSize: "1.25rem", fontWeight: 600 }}>Quick System Actions</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   <Link href="/dashboard/admin/students" className="btn btn-primary" style={{ justifyContent: "center" }}>
-                    ➕ Add & Manage Students
+                    🎓 Manage Students
                   </Link>
-                  <Link href="/dashboard/admin/reports" className="btn btn-secondary" style={{ justifyContent: "center" }}>
-                    📊 Generate Reports Center
+                  <Link href="/dashboard/admin/teachers" className="btn btn-secondary" style={{ justifyContent: "center", background: "rgba(255,255,255,0.05)" }}>
+                    🧑‍🏫 Manage Teachers
+                  </Link>
+                  <Link href="/dashboard/admin/courses" className="btn btn-secondary" style={{ justifyContent: "center", background: "rgba(255,255,255,0.05)" }}>
+                    📚 Manage Courses
+                  </Link>
+                  <Link href="/dashboard/admin/reports" className="btn btn-secondary" style={{ justifyContent: "center", background: "rgba(255,255,255,0.05)" }}>
+                    📈 Generate Reports Center
                   </Link>
                 </div>
               </div>
