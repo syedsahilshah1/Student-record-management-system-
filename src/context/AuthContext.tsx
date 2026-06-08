@@ -10,7 +10,6 @@ interface AuthContextType {
   isDemoMode: boolean;
   login: (email: string, password: string) => Promise<UserProfile>;
   logout: () => Promise<void>;
-  seedAdmin: () => Promise<void>;
   changePassword: (newPassword: string) => Promise<void>;
 }
 
@@ -68,15 +67,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const seedAdmin = async () => {
-    setLoading(true);
-    try {
-      await authService.seedAdmin();
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const changePassword = async (newPassword: string) => {
     setLoading(true);
     try {
@@ -93,7 +83,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       login, 
       logout, 
       isDemoMode: authService.isDemoMode,
-      seedAdmin,
       changePassword
     }}>
       {children}

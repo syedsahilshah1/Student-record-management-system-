@@ -70,7 +70,7 @@ export const authService = {
           const data = userSnap.data();
           return {
             uid: user.uid,
-            name: data.name || user.displayName || "User",
+            name: data.name || user.displayName || "System Administrator",
             email: user.email || cleanEmail,
             role: data.role || "admin",
           };
@@ -78,7 +78,7 @@ export const authService = {
           // Fallback profile if Firestore entry is missing
           return {
             uid: user.uid,
-            name: user.displayName || "Administrator",
+            name: user.displayName || "System Administrator",
             email: user.email || cleanEmail,
             role: "admin", // default role is admin so new Auth users can configure the app
           };
@@ -234,14 +234,14 @@ export const authService = {
               const data = userSnap.data();
               callback({
                 uid: firebaseUser.uid,
-                name: data.name || firebaseUser.displayName || "User",
+                name: data.name || firebaseUser.displayName || "System Administrator",
                 email: firebaseUser.email || "",
                 role: data.role || "admin",
               });
             } else {
               callback({
                 uid: firebaseUser.uid,
-                name: firebaseUser.displayName || "Administrator",
+                name: firebaseUser.displayName || "System Administrator",
                 email: firebaseUser.email || "",
                 role: "admin",
               });
@@ -275,57 +275,6 @@ export const authService = {
       return null;
     } else {
       return currentMockUser;
-    }
-  },
-
-  // Seed default admin account and datasets inside live Firebase
-  seedAdmin: async (): Promise<void> => {
-    if (isFirebaseConfigured && auth && db) {
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, "admin@srms.com", "admin123");
-        const user = userCredential.user;
-        
-        // Save Admin profile in 'users'
-        await setDoc(doc(db, "users", user.uid), {
-          uid: user.uid,
-          name: "System Administrator",
-          email: "admin@srms.com",
-          role: "admin",
-        });
-        
-        // Batch seed students and courses
-        const batch = writeBatch(db);
-        
-        // Seed students
-        MOCK_STUDENTS.forEach((stu) => {
-          const docRef = doc(db!, "students", stu.studentId);
-          batch.set(docRef, stu);
-          
-          // Seed corresponding student user entry
-          const userDocRef = doc(db!, "users", stu.studentId);
-          batch.set(userDocRef, {
-            uid: stu.studentId,
-            name: stu.name,
-            email: stu.email,
-            role: "student"
-          });
-        });
-
-        // Seed courses
-        MOCK_COURSES.forEach((course) => {
-          const docRef = doc(db!, "courses", course.courseId);
-          batch.set(docRef, course);
-        });
-
-        await batch.commit();
-      } catch (err: any) {
-        if (err.code === "auth/email-already-in-use") {
-          throw new Error("Admin user 'admin@srms.com' is already registered in Firebase Auth.");
-        }
-        throw err;
-      }
-    } else {
-      throw new Error("Cannot seed database in Demo Mode.");
     }
   }
 };

@@ -4,13 +4,12 @@ import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
-  const { login, isDemoMode, seedAdmin } = useAuth();
+  const { login, isDemoMode } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSeeding, setIsSeeding] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,21 +35,6 @@ export default function LoginPage() {
     setPassword(demoPass);
     setError(null);
     setSuccess(null);
-  };
-
-  const handleSeedFirebase = async () => {
-    setError(null);
-    setSuccess("Registering admin account and seeding roster data in Firebase...");
-    setIsSeeding(true);
-    try {
-      await seedAdmin();
-      setSuccess("Database initialized! You can now sign in using: admin@srms.com / admin123");
-    } catch (err: any) {
-      setSuccess(null);
-      setError(err.message || "Failed to initialize Firebase database.");
-    } finally {
-      setIsSeeding(false);
-    }
   };
 
   return (
@@ -221,38 +205,6 @@ export default function LoginPage() {
                 <span style={{ color: "var(--text-muted)" }}>Select</span>
               </button>
             </div>
-          </div>
-        )}
-
-        {!isDemoMode && (
-          <div style={{
-            borderTop: "1px solid var(--border-glass)",
-            paddingTop: "1.5rem",
-            marginTop: "0.5rem",
-            textAlign: "center"
-          }}>
-            <h4 style={{
-              fontSize: "0.8rem",
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-              color: "var(--text-muted)",
-              marginBottom: "0.75rem"
-            }}>
-              First Time Setup?
-            </h4>
-            <button
-              type="button"
-              onClick={handleSeedFirebase}
-              className="btn btn-secondary"
-              style={{ width: "100%", padding: "0.6rem", fontSize: "0.85rem" }}
-              disabled={isSeeding}
-            >
-              {isSeeding ? "Seeding Live Database..." : "🚀 Seed Default Roster & Admin"}
-            </button>
-            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.5rem", lineHeight: 1.4 }}>
-              Click to register <strong>admin@srms.com</strong> (pass: <strong>admin123</strong>) in Firebase and load default students/courses.
-            </p>
           </div>
         )}
       </div>
