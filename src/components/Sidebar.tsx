@@ -29,17 +29,20 @@ export const Sidebar: React.FC = () => {
       { label: "Attendance Records", href: "/dashboard/admin/attendance", icon: "📅" },
       { label: "Marks Overview", href: "/dashboard/admin/marks", icon: "📝" },
       { label: "Report Center", href: "/dashboard/admin/reports", icon: "📈" },
+      { label: "My Profile", href: "/dashboard/profile", icon: "👤" },
     ],
     teacher: [
       { label: "Dashboard", href: "/dashboard/teacher", icon: "📊" },
       { label: "Mark Attendance", href: "/dashboard/teacher/attendance", icon: "📅" },
       { label: "Record Marks", href: "/dashboard/teacher/marks", icon: "📝" },
+      { label: "My Profile", href: "/dashboard/profile", icon: "👤" },
     ],
     student: [
-      { label: "Profile Hub", href: "/dashboard/student", icon: "🎓" },
+      { label: "Dashboard", href: "/dashboard/student", icon: "📊" },
       { label: "Faculty Directory", href: "/dashboard/student/faculty", icon: "🧑‍🏫" },
       { label: "My Attendance", href: "/dashboard/student/attendance", icon: "📅" },
       { label: "My Marks", href: "/dashboard/student/marks", icon: "📝" },
+      { label: "My Profile", href: "/dashboard/profile", icon: "👤" },
     ],
   };
 

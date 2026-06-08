@@ -48,6 +48,39 @@ export const Navbar: React.FC = () => {
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+        {/* Profile Avatar */}
+        {user.photoURL ? (
+          <img 
+            src={user.photoURL} 
+            alt="Profile Avatar"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "2px solid var(--primary)",
+              boxShadow: "0 0 10px rgba(99, 102, 241, 0.2)"
+            }}
+          />
+        ) : (
+          <div style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontWeight: 700,
+            fontSize: "0.95rem",
+            color: "#fff",
+            border: "1px solid var(--border-glass)",
+            boxShadow: "0 0 10px rgba(99, 102, 241, 0.1)"
+          }}>
+            {user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+          </div>
+        )}
+
         <div style={{ textAlign: "right" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", justifyContent: "flex-end" }}>
             <span style={{ fontSize: "0.95rem", fontWeight: 600 }}>{user.name}</span>

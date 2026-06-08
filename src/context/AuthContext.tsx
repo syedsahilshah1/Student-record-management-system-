@@ -11,6 +11,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<UserProfile>;
   logout: () => Promise<void>;
   changePassword: (newPassword: string) => Promise<void>;
+  updateProfilePicture: (photoURL: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -76,6 +77,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateProfilePicture = async (photoURL: string) => {
+    setLoading(true);
+    try {
+      await authService.updateProfilePicture(photoURL);
+      if (authService.isDemoMode) {
+        setUser((prev) => (prev ? { ...prev, photoURL } : null));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -83,7 +96,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       login, 
       logout, 
       isDemoMode: authService.isDemoMode,
-      changePassword
+      changePassword,
+      updateProfilePicture
     }}>
       {children}
     </AuthContext.Provider>

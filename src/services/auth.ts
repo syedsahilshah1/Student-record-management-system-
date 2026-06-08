@@ -16,6 +16,7 @@ export interface UserProfile {
   name: string;
   email: string;
   role: "admin" | "teacher" | "student";
+  photoURL?: string;
 }
 
 // Pre-seeded mock credentials and profiles
@@ -73,6 +74,7 @@ export const authService = {
             name: data.name || user.displayName || "System Administrator",
             email: user.email || cleanEmail,
             role: data.role || "admin",
+            photoURL: data.photoURL || "",
           };
         } else {
           // Fallback profile if Firestore entry is missing
@@ -81,6 +83,7 @@ export const authService = {
             name: user.displayName || "System Administrator",
             email: user.email || cleanEmail,
             role: "admin", // default role is admin so new Auth users can configure the app
+            photoURL: user.photoURL || "",
           };
         }
       } catch (err: any) {
@@ -118,9 +121,10 @@ export const authService = {
                 
                 return {
                   uid: newUser.uid,
-                  name: tempDocData.name || "Student",
+                  name: tempDocData.name || "System User",
                   email: cleanEmail,
-                  role: tempDocData.role || "student"
+                  role: tempDocData.role || "student",
+                  photoURL: tempDocData.photoURL || "",
                 };
               }
             }
@@ -153,6 +157,7 @@ export const authService = {
             name: mockUser.name,
             email: mockUser.email,
             role: mockUser.role,
+            photoURL: mockUser.photoURL || "",
           };
           localStorage.setItem("srms_current_user", JSON.stringify(currentMockUser));
           triggerListeners();
@@ -179,6 +184,7 @@ export const authService = {
             name: enrolledStudent.name,
             email: enrolledStudent.email,
             role: "student",
+            photoURL: (enrolledStudent as any).photoURL || "",
           };
           if (!savedPasswords[cleanEmail]) {
             savedPasswords[cleanEmail] = enrolledStudent.email.toLowerCase();
@@ -209,6 +215,7 @@ export const authService = {
             name: enrolledTeacher.name,
             email: enrolledTeacher.email,
             role: "teacher",
+            photoURL: enrolledTeacher.photoURL || "",
           };
           if (!savedPasswords[cleanEmail]) {
             savedPasswords[cleanEmail] = enrolledTeacher.email.toLowerCase();
@@ -271,6 +278,7 @@ export const authService = {
                 name: data.name || firebaseUser.displayName || "System Administrator",
                 email: firebaseUser.email || "",
                 role: data.role || "admin",
+                photoURL: data.photoURL || "",
               });
             } else {
               callback({
@@ -278,6 +286,7 @@ export const authService = {
                 name: firebaseUser.displayName || "System Administrator",
                 email: firebaseUser.email || "",
                 role: "admin",
+                photoURL: firebaseUser.photoURL || "",
               });
             }
           } catch (e) {
@@ -296,6 +305,63 @@ export const authService = {
       return () => {
         listeners.delete(callback);
       };
+    }
+  },
+
+  // Update Profile Picture
+  updateProfilePicture: async (photoURL: string): Promise<void> => {
+    if (isFirebaseConfigured && auth && db) {
+      const fbUser = auth.currentUser;
+      if (!fbUser) throw new Error("No authenticated user session found.");
+      
+      // Update users collection
+      const userDocRef = doc(db, "users", fbUser.uid);
+      await setDoc(userDocRef, { photoURL }, { merge: true });
+      
+      // Update students collection if applicable
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.role === "student") {
+          const studentDocRef = doc(db, "students", fbUser.uid);
+          const studentSnap = await getDoc(studentDocRef);
+          if (studentSnap.exists()) {
+            await setDoc(studentDocRef, { photoURL }, { merge: true });
+          }
+        }
+      }
+    } else {
+      if (!currentMockUser) throw new Error("No authenticated user session found.");
+      currentMockUser.photoURL = photoURL;
+      localStorage.setItem("srms_current_user", JSON.stringify(currentMockUser));
+      
+      // Update list collections
+      if (currentMockUser.role === "teacher") {
+        const stored = localStorage.getItem("srms_teachers");
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            const index = parsed.findIndex((t: any) => t.uid === currentMockUser!.uid);
+            if (index > -1) {
+              parsed[index].photoURL = photoURL;
+              localStorage.setItem("srms_teachers", JSON.stringify(parsed));
+            }
+          } catch {}
+        }
+      } else if (currentMockUser.role === "student") {
+        const stored = localStorage.getItem("srms_students");
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            const index = parsed.findIndex((s: any) => s.studentId === currentMockUser!.uid);
+            if (index > -1) {
+              parsed[index].photoURL = photoURL;
+              localStorage.setItem("srms_students", JSON.stringify(parsed));
+            }
+          } catch {}
+        }
+      }
+      triggerListeners();
     }
   },
 
