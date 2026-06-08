@@ -472,16 +472,52 @@ a:hover {
   }
 }
 
-/* Custom print layouts for Student Record Modal */
 @media print {
-  .no-print, header, aside, .modal-backdrop-print-hide {
+  .no-print, header, aside {
     display: none !important;
+  }
+
+  /* Make sure the modal overlay itself doesn't hide but becomes a simple static wrapper */
+  .modal-backdrop-print-hide {
+    position: static !important;
+    background: none !important;
+    backdrop-filter: none !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: auto !important;
+    transform: none !important;
+  }
+
+  /* Reset animations and opacity to prevent blank prints from fadeIn transitions */
+  *, .animate-fade, .animate-slide-left {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Reset layout wrapper flexboxes to block flow to prevent print collapse */
+  div[style*="min-height: 100vh"],
+  div[style*="display: flex"],
+  main {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   body, html {
     background: #fff !important;
     color: #000 !important;
     font-size: 11pt !important;
+    height: auto !important;
+    min-height: auto !important;
   }
 
   .student-record-print-modal {
