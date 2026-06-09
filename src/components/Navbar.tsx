@@ -3,6 +3,7 @@
 import React from "react";
 import { useAuth } from "@/context/AuthContext";
 
+
 export const Navbar: React.FC = () => {
   const { user, logout, isDemoMode } = useAuth();
 
