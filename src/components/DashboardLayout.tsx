@@ -15,6 +15,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, allo
   const { user, loading } = useAuth();
   const router = useRouter();
 
+  
   useEffect(() => {
     if (!loading) {
       if (!user) {
