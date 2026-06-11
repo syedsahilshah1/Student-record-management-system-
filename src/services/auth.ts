@@ -1,7 +1,7 @@
-import { 
-  signInWithEmailAndPassword, 
+import {
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signOut, 
+  signOut,
   onAuthStateChanged,
   updatePassword,
   User as FirebaseUser
@@ -56,17 +56,17 @@ export const authService = {
   // Login
   login: async (email: string, password: string): Promise<UserProfile> => {
     const cleanEmail = email.trim().toLowerCase();
-    
+
     if (isFirebaseConfigured && auth && db) {
       try {
         // Firebase Login
         const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
         const user = userCredential.user;
-        
+
         // Fetch user role/profile from Firestore 'users' collection
         const userDocRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userDocRef);
-        
+
         if (userSnap.exists()) {
           const data = userSnap.data();
           return {
@@ -93,18 +93,18 @@ export const authService = {
           try {
             const usersQ = query(collection(db, "users"), where("email", "==", cleanEmail));
             const usersSnap = await getDocs(usersQ);
-            
+
             if (!usersSnap.empty) {
               const tempDoc = usersSnap.docs[0];
               const tempDocData = tempDoc.data();
               const tempDocId = tempDoc.id; // studentId
-              
+
               // If password entered matches email (default password)
               if (password === cleanEmail) {
                 // Register in Firebase Auth
                 const signupCred = await createUserWithEmailAndPassword(auth, cleanEmail, password);
                 const newUser = signupCred.user;
-                
+
                 // Copy/create permanent users doc at users[newUser.uid]
                 await setDoc(doc(db, "users", newUser.uid), {
                   ...tempDocData,
@@ -113,12 +113,12 @@ export const authService = {
                   email: cleanEmail,
                   role: tempDocData.role || "student"
                 });
-                
+
                 // Delete temporary user document
                 if (tempDocId !== newUser.uid) {
                   await deleteDoc(doc(db, "users", tempDocId));
                 }
-                
+
                 return {
                   uid: newUser.uid,
                   name: tempDocData.name || "System User",
@@ -143,9 +143,10 @@ export const authService = {
       if (typeof window !== "undefined") {
         const saved = localStorage.getItem("srms_mock_passwords");
         if (saved) {
-          try { savedPasswords = JSON.parse(saved); } catch {}
+          try { savedPasswords = JSON.parse(saved); } catch { }
         }
       }
+
 
       // Check pre-seeded users
       const mockUser = MOCK_USERS[cleanEmail];
@@ -170,7 +171,7 @@ export const authService = {
       if (typeof window !== "undefined") {
         const stored = localStorage.getItem("srms_students");
         if (stored) {
-          try { studentsList = JSON.parse(stored); } catch {}
+          try { studentsList = JSON.parse(stored); } catch { }
         }
       }
 
@@ -201,7 +202,7 @@ export const authService = {
       if (typeof window !== "undefined") {
         const stored = localStorage.getItem("srms_teachers");
         if (stored) {
-          try { teachersList = JSON.parse(stored); } catch {}
+          try { teachersList = JSON.parse(stored); } catch { }
         }
       }
 
@@ -226,7 +227,7 @@ export const authService = {
           return currentMockUser;
         }
       }
-      
+
       throw new Error("Invalid email or password");
     }
   },
@@ -243,7 +244,7 @@ export const authService = {
       if (typeof window !== "undefined") {
         const saved = localStorage.getItem("srms_mock_passwords");
         if (saved) {
-          try { savedPasswords = JSON.parse(saved); } catch {}
+          try { savedPasswords = JSON.parse(saved); } catch { }
         }
         savedPasswords[currentMockUser.email.toLowerCase()] = newPassword;
         localStorage.setItem("srms_mock_passwords", JSON.stringify(savedPasswords));
@@ -313,11 +314,11 @@ export const authService = {
     if (isFirebaseConfigured && auth && db) {
       const fbUser = auth.currentUser;
       if (!fbUser) throw new Error("No authenticated user session found.");
-      
+
       // Update users collection
       const userDocRef = doc(db, "users", fbUser.uid);
       await setDoc(userDocRef, { photoURL }, { merge: true });
-      
+
       // Update students collection if applicable
       const userSnap = await getDoc(userDocRef);
       if (userSnap.exists()) {
@@ -334,7 +335,7 @@ export const authService = {
       if (!currentMockUser) throw new Error("No authenticated user session found.");
       currentMockUser.photoURL = photoURL;
       localStorage.setItem("srms_current_user", JSON.stringify(currentMockUser));
-      
+
       // Update list collections
       if (currentMockUser.role === "teacher") {
         const stored = localStorage.getItem("srms_teachers");
@@ -346,7 +347,7 @@ export const authService = {
               parsed[index].photoURL = photoURL;
               localStorage.setItem("srms_teachers", JSON.stringify(parsed));
             }
-          } catch {}
+          } catch { }
         }
       } else if (currentMockUser.role === "student") {
         const stored = localStorage.getItem("srms_students");
@@ -358,7 +359,7 @@ export const authService = {
               parsed[index].photoURL = photoURL;
               localStorage.setItem("srms_students", JSON.stringify(parsed));
             }
-          } catch {}
+          } catch { }
         }
       }
       triggerListeners();
