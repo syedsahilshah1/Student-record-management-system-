@@ -144,6 +144,14 @@ export default function LoginPage() {
             ⚠️ <strong>Offline Demo Mode</strong>: Database environment variables are not configured. Use <strong>admin@srms.com</strong> / <strong>admin123</strong> to test the console.
           </p>
         )}
+        <p style={{
+          fontSize: "0.85rem",
+          color: "var(--text-secondary)",
+          textAlign: "center",
+          marginTop: "1rem"
+        }}>
+          💡 Note: For newly added teachers or students, the default password is their email address.
+        </p>
       </div>
     </div>
   );
