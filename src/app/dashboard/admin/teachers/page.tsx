@@ -97,7 +97,7 @@ export default function AdminTeachersPage() {
         designation,
         specialization: specialization.trim()
       });
-      setSuccess(`Teacher ${name} (${formattedId}) added successfully.`);
+      setSuccess(`Teacher ${name} (${formattedId}) added successfully. Default password is their email address.`);
       
       // Reset Form
       setTeacherId("");
